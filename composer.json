@@ -1,0 +1,9 @@
+{
+    "name": "pimenta/app",
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "heroku/heroku-buildpack-php": "*"
+    }
+}
