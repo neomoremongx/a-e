@@ -1330,57 +1330,57 @@
                     </div>
                 </div>
                 <div class="booking-form">
-                    <form id="bookingForm" action="mail.php" method="POST">
-                        <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" class="form-control" placeholder="Your Full Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Your Email</label>
-                            <input type="email" id="email" class="form-control" placeholder="Your Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Your Phone</label>
-                            <input type="tel" id="phone" class="form-control" placeholder="Your Phone Number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="event-type">Event Type</label>
-                            <select id="event-type" class="form-control" required>
-                                <option value="">Select Event Type</option>
-                                <option value="wedding">Wedding</option>
-                                <option value="birthday">Birthday Party</option>
-                                <option value="corporate">Corporate Event</option>
-                                <option value="graduation">Graduation Party</option>
-                                <option value="baby-shower">Baby Shower</option>
-                                <option value="anniversary">Anniversary Party</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="event-date">Event Date</label>
-                            <input type="date" id="event-date" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="guest-count">Approximate Guest Count</label>
-                            <input type="number" id="guest-count" class="form-control" placeholder="Number of Guests" min="1" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="budget">Budget Range</label>
-                            <select id="budget" class="form-control" required>
-                                <option value="">Select Budget Range</option>
-                                <option value="under-5000">Under R5,000</option>
-                                <option value="5000-10000">R5,000 - R10,000</option>
-                                <option value="10000-20000">R10,000 - R20,000</option>
-                                <option value="20000-50000">R20,000 - R50,000</option>
-                                <option value="over-50000">Over R50,000</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Event Details & Special Requests</label>
-                            <textarea id="message" class="form-control" rows="5" placeholder="Please describe your event vision, theme, colors, and any special requests..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Submit Booking Request</button>
-                    </form>
+                     <form id="bookingForm" action="reservation.php" method="POST">
+    <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Your Full Name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Your Email Address" required>
+    </div>
+    <div class="form-group">
+        <label for="phone">Your Phone</label>
+        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Your Phone Number" required>
+    </div>
+    <div class="form-group">
+        <label for="event-type">Event Type</label>
+        <select id="event-type" name="event-type" class="form-control" required>
+            <option value="">Select Event Type</option>
+            <option value="wedding">Wedding</option>
+            <option value="birthday">Birthday Party</option>
+            <option value="corporate">Corporate Event</option>
+            <option value="graduation">Graduation Party</option>
+            <option value="baby-shower">Baby Shower</option>
+            <option value="anniversary">Anniversary Party</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="event-date">Event Date</label>
+        <input type="date" id="event-date" name="event-date" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="guest-count">Approximate Guest Count</label>
+        <input type="number" id="guest-count" name="guest-count" class="form-control" placeholder="Number of Guests" min="1" required>
+    </div>
+    <div class="form-group">
+        <label for="budget">Budget Range</label>
+        <select id="budget" name="budget" class="form-control" required>
+            <option value="">Select Budget Range</option>
+            <option value="under-5000">Under R5,000</option>
+            <option value="5000-10000">R5,000 - R10,000</option>
+            <option value="10000-20000">R10,000 - R20,000</option>
+            <option value="20000-50000">R20,000 - R50,000</option>
+            <option value="over-50000">Over R50,000</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="message">Event Details & Special Requests</label>
+        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Please describe your event vision, theme, colors, and any special requests..." required></textarea>
+    </div>
+    <button type="submit" class="btn">Submit Booking Request</button>
+</form>
                 </div>
             </div>
         </div>
@@ -1436,29 +1436,29 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm" action="mail.php" method="POST">
-                        <div class="form-group">
-                            <label for="contact-name">Your Name</label>
-                            <input type="text" id="contact-name" class="form-control" placeholder="Your Full Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-email">Your Email</label>
-                            <input type="email" id="contact-email" class="form-control" placeholder="Your Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-phone">Your Phone</label>
-                            <input type="tel" id="contact-phone" class="form-control" placeholder="Your Phone Number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" class="form-control" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-message">Your Message</label>
-                            <textarea id="contact-message" class="form-control" rows="5" placeholder="Please describe your inquiry..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Send Message</button>
-                    </form>
+                     <form id="contactForm" action="mail.php" method="POST">
+    <div class="form-group">
+        <label for="contact-name">Your Name</label>
+        <input type="text" id="contact-name" name="contact-name" class="form-control" placeholder="Your Full Name" required>
+    </div>
+    <div class="form-group">
+        <label for="contact-email">Your Email</label>
+        <input type="email" id="contact-email" name="contact-email" class="form-control" placeholder="Your Email Address" required>
+    </div>
+    <div class="form-group">
+        <label for="contact-phone">Your Phone</label>
+        <input type="tel" id="contact-phone" name="contact-phone" class="form-control" placeholder="Your Phone Number" required>
+    </div>
+    <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject" required>
+    </div>
+    <div class="form-group">
+        <label for="contact-message">Your Message</label>
+        <textarea id="contact-message" name="contact-message" class="form-control" rows="5" placeholder="Please describe your inquiry..." required></textarea>
+    </div>
+    <button type="submit" class="btn">Send Message</button>
+</form>
                 </div>
             </div>
         </div>
@@ -1564,36 +1564,7 @@
             item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
             galleryObserver.observe(item);
         });
-        
-        // Form submissions
-        const bookingForm = document.getElementById('bookingForm');
-        const contactForm = document.getElementById('contactForm');
-        
-        bookingForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = document.getElementById('name').value;
-            
-            // In a real implementation, you would send this data to a server
-            // For now, we'll just show a success message
-            alert(`Thank you ${name}! Your booking request has been received. We will contact you shortly to discuss your event.`);
-            bookingForm.reset();
-        });
-        
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = document.getElementById('contact-name').value;
-            
-            // In a real implementation, you would send this data to a server
-            // For now, we'll just show a success message
-            alert(`Thank you ${name}! Your message has been received. We will respond to your inquiry shortly.`);
-            contactForm.reset();
-        });
+    
         
         // Animation on scroll for other elements
         const observerOptions = {
