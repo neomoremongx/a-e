@@ -11,17 +11,17 @@ require 'phpmailer/src/PHPMailer.php';
 require 'phpmailer/src/SMTP.php';
 
 //Create an instance; passing `true` enables exceptions
-if (isset($_POST["send"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
-   $name= $_POST["name"];
-   $subject = "Reservations";
-   $email= $_POST["email"];
+   $name = $_POST["name"];
+   $subject = "Decor Booking Request - A&E Decor";
+   $email = $_POST["email"];
    $phone = $_POST["phone"];
-   $special_requests = $_POST["requests"];
-   $guests = filter_input(INPUT_POST,"guests",FILTER_VALIDATE_INT);
-   $time = $_POST["time"];
-   $date = $_POST["date"];
-   $terms = filter_input(INPUT_POST,"terms",FILTER_VALIDATE_BOOL);
+   $event_type = $_POST["event-type"];
+   $event_date = $_POST["event-date"];
+   $guest_count = filter_input(INPUT_POST, "guest-count", FILTER_VALIDATE_INT);
+   $budget = $_POST["budget"];
+   $message = $_POST["message"];
 
   $mail = new PHPMailer(true);
 
@@ -35,7 +35,7 @@ if (isset($_POST["send"])) {
     $mail->Port       = 465;                                    
 
     //Recipients
-    $mail->setFrom( $_POST["email"], $_POST["name"]); // Sender Email and name
+    $mail->setFrom($_POST["email"], $_POST["name"]); // Sender Email and name
     $mail->addAddress('neomoremongx@gmail.com');     //Add a recipient email  
     $mail->addReplyTo($_POST["email"], $_POST["name"]); // reply to sender email
 
@@ -43,7 +43,18 @@ if (isset($_POST["send"])) {
     $mail->isHTML(true);               //Set email format to HTML
     $mail->Subject = $subject;   // email subject headings
     
-    $reservation_message = "
+    // Map budget values to readable text
+    $budget_ranges = [
+        'under-5000' => 'Under R5,000',
+        '5000-10000' => 'R5,000 - R10,000',
+        '10000-20000' => 'R10,000 - R20,000',
+        '20000-50000' => 'R20,000 - R50,000',
+        'over-50000' => 'Over R50,000'
+    ];
+    
+    $budget_text = isset($budget_ranges[$budget]) ? $budget_ranges[$budget] : $budget;
+
+    $booking_message = "
 <html>
 <head>
     <style>
@@ -56,7 +67,7 @@ if (isset($_POST["send"])) {
             padding: 20px;
         }
         .header {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/pimenta.jpg') no-repeat center center/cover;
+            background: linear-gradient(rgba(255, 105, 180, 0.8), rgba(255, 105, 180, 0.9));
             color: white;
             padding: 30px;
             text-align: center;
@@ -83,7 +94,7 @@ if (isset($_POST["send"])) {
         }
         .detail-label {
             font-weight: bold;
-            color: #1e3f2d;
+            color: #FF69B4;
             width: 180px;
             flex-shrink: 0;
         }
@@ -91,7 +102,7 @@ if (isset($_POST["send"])) {
             color: #555;
         }
         .footer {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/pimenta.jpg') no-repeat center center/cover;
+            background: linear-gradient(rgba(255, 105, 180, 0.8), rgba(255, 105, 180, 0.9));
             color: white;
             padding: 25px;
             text-align: center;
@@ -99,62 +110,60 @@ if (isset($_POST["send"])) {
             margin-top: 20px;
         }
         .special-requests {
-            background: #fff8e1;
+            background: #fff0f7;
             padding: 20px;
-            border-left: 4px solid #c8a97e;
+            border-left: 4px solid #FF69B4;
             margin: 15px 0;
             border-radius: 4px;
         }
         .thank-you {
             font-size: 18px;
-            color: #1e3f2d;
+            color: #FF69B4;
             text-align: center;
             margin-bottom: 25px;
             font-weight: bold;
-        }
-        .restaurant-info {
-            background: #f8f8f8;
-            padding: 20px;
-            border-radius: 6px;
-            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class=\"header\">
-        <h1> Reservation Request</h1>
-        <p>Pimenta is Hand Crafted Portuguese Cuisine at its best</p>
+        <h1>Decor Booking Request</h1>
+        <p>A & E Wedding and Function Decor - Creating Dream Events</p>
     </div>
     
     <div class=\"content\">
+        <div class=\"thank-you\">
+            New Booking Request Received!
+        </div>
         
-       
-        
-        <p>Dear </p>
-        
-        <p>You have received a reservation request from <strong>{$name}</strong>, </p>
+        <p>You have received a new decor booking request from <strong>{$name}</strong>.</p>
         
         <div class=\"details\">
-            <h3 style=\"color: #1e3f2d; margin-top: 0; text-align: center;\"> Reservation Details</h3>
+            <h3 style=\"color: #FF69B4; margin-top: 0; text-align: center;\">Event Details</h3>
             
             <div class=\"detail-row\">
-                <span class=\"detail-label\">Guest Name:</span>
+                <span class=\"detail-label\">Client Name:</span>
                 <span class=\"detail-value\">{$name}</span>
             </div>
             
             <div class=\"detail-row\">
-                <span class=\"detail-label\">Reservation Date:</span>
-                <span class=\"detail-value\">" . date('F j, Y', strtotime($date)) . "</span>
+                <span class=\"detail-label\">Event Type:</span>
+                <span class=\"detail-value\">" . ucfirst(str_replace('-', ' ', $event_type)) . "</span>
             </div>
             
             <div class=\"detail-row\">
-                <span class=\"detail-label\">Reservation Time:</span>
-                <span class=\"detail-value\">{$time}</span>
+                <span class=\"detail-label\">Event Date:</span>
+                <span class=\"detail-value\">" . date('F j, Y', strtotime($event_date)) . "</span>
             </div>
             
             <div class=\"detail-row\">
                 <span class=\"detail-label\">Number of Guests:</span>
-                <span class=\"detail-value\">{$guests} " . ($guests == 1 ? 'person' : 'people') . "</span>
+                <span class=\"detail-value\">{$guest_count}</span>
+            </div>
+            
+            <div class=\"detail-row\">
+                <span class=\"detail-label\">Budget Range:</span>
+                <span class=\"detail-value\">{$budget_text}</span>
             </div>
             
             <div class=\"detail-row\">
@@ -168,30 +177,34 @@ if (isset($_POST["send"])) {
             </div>
         </div>
         
-        " . (!empty($special_requests) ? "
+        " . (!empty($message) ? "
         <div class=\"special-requests\">
-            <h4 style=\"color: #1e3f2d; margin-top: 0;\">Special Requests</h4>
-            <p style=\"margin: 0; font-style: italic;\">{$special_requests}</p>
+            <h4 style=\"color: #FF69B4; margin-top: 0;\">Event Details & Special Requests</h4>
+            <p style=\"margin: 0; font-style: italic;\">{$message}</p>
         </div>
         " : "") . "
 
-
-    <p>Contact <strong>{$name}</strong> to confirm the reservation</p>
-        
-         
+        <p>Please contact <strong>{$name}</strong> at {$email} or {$phone} to discuss this booking request.</p>
+    </div>
     
     <div class=\"footer\">
         <p style=\"margin: 0; font-size: 14px;\">
-            <strong>Pimenta Restaurant</strong>
+            <strong>A & E Wedding and Function Decor</strong>
             <br>
-            © " . date('Y') . " Pimenta Restaurant. All rights reserved.
+            41 Paryslaan, Potchefstroom, South Africa
+            <br>
+            Phone: 082 801 2827 | Email: aedecor@aedecor.org.za
+            <br>
+            © " . date('Y') . " A & E Decor. All rights reserved.
         </p>
     </div>
 </body>
 </html>
 ";
+
+   // Date validation
    $today = date('Y-m-d');
-    if ($date < $today) {
+   if ($event_date < $today) {
     echo "
     <script>
      alert('Error: Please select a date that is today or in the future. You cannot make reservations for past dates.');
@@ -199,89 +212,99 @@ if (isset($_POST["send"])) {
     </script>
     ";
     exit;
+   }
+
+    try {
+        // Success sent message alert
+        $mail->Body = $booking_message;
+        $mail->send();
+
+        // Auto-reply to customer
+        $autoReplyMail = new PHPMailer(true);
+
+        //Server settings - same as your main email
+        $autoReplyMail->isSMTP();
+        $autoReplyMail->Host       = 'smtp.gmail.com';
+        $autoReplyMail->SMTPAuth   = true;
+        $autoReplyMail->Username   = 'neomoremongx@gmail.com';
+        $autoReplyMail->Password   = 'pxcosqmpbjlodmyw';
+        $autoReplyMail->SMTPSecure = 'ssl';
+        $autoReplyMail->Port       = 465;
+
+        //Recipients
+        $autoReplyMail->setFrom('neomoremongx@gmail.com', 'A & E Wedding and Function Decor');
+        $autoReplyMail->addAddress($_POST["email"], $_POST["name"]); // Send to the customer
+        $autoReplyMail->addReplyTo('neomoremongx@gmail.com', 'A & E Decor');
+
+        //Content
+        $autoReplyMail->isHTML(true);
+        $autoReplyMail->Subject = "Booking Request Received - A & E Decor";
+        
+        $autoReplyMessage = "
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .header { background: #FF69B4; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .footer { background: #FF69B4; color: white; padding: 15px; text-align: center; }
+                .details { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; }
+            </style>
+        </head>
+        <body>
+            <div class=\"header\">
+                <h2>Thank You for Your Booking Request!</h2>
+            </div>
+            <div class=\"content\">
+                <p>Dear {$name},</p>
+                <p>We have received your decor booking request for your <strong>" . ucfirst(str_replace('-', ' ', $event_type)) . "</strong> on <strong>" . date('F j, Y', strtotime($event_date)) . "</strong> for <strong>{$guest_count}</strong> guests.</p>
+                
+                <div class=\"details\">
+                    <p><strong>Booking Summary:</strong><br>
+                    Event Type: " . ucfirst(str_replace('-', ' ', $event_type)) . "<br>
+                    Event Date: " . date('F j, Y', strtotime($event_date)) . "<br>
+                    Guest Count: {$guest_count}<br>
+                    Budget Range: {$budget_text}<br>
+                    Contact: {$phone}</p>
+                </div>
+                
+                <p>Our team will review your request and contact you within 24-48 hours to discuss your event in detail and provide a customized quote.</p>
+                <p>If you have any urgent questions, please don't hesitate to contact us at 082 801 2827.</p>
+                <p>Best regards,<br><strong>The A & E Decor Team</strong></p>
+            </div>
+            <div class=\"footer\">
+                <p>A & E Wedding and Function Decor<br>
+                41 Paryslaan, Potchefstroom | 082 801 2827 | aedecor@aedecor.org.za<br>
+                © " . date('Y') . " A & E Decor. All rights reserved.</p>
+            </div>
+        </body>
+        </html>
+        ";
+        
+        $autoReplyMail->Body = $autoReplyMessage;
+        $autoReplyMail->send();
+        
+        // Success message
+        echo "
+        <script> 
+         alert('Thank you! Your booking request has been sent successfully. We will contact you shortly.');
+         document.location.href = 'index.html';
+        </script>
+        ";
+        
+    } catch (Exception $e) {
+        // Error message
+        echo "
+        <script> 
+         alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 082 801 2827.');
+         document.location.href = 'index.html';
+        </script>
+        ";
     }
-    // Success sent message alert
-    $mail->Body    = $reservation_message; //email message;
-    $mail->send();
-
-   
-
-// Auto-reply to customer
-$autoReplyMail = new PHPMailer(true);
-
-try {
-    //Server settings - same as your main email
-    $autoReplyMail->isSMTP();
-    $autoReplyMail->Host       = 'smtp.gmail.com';
-    $autoReplyMail->SMTPAuth   = true;
-    $autoReplyMail->Username   = 'neomoremongx@gmail.com';
-    $autoReplyMail->Password   = 'pxcosqmpbjlodmyw';
-    $autoReplyMail->SMTPSecure = 'ssl';
-    $autoReplyMail->Port       = 465;
-
-    //Recipients
-    $autoReplyMail->setFrom('neomoremongx@gmail.com', 'Pimenta Restaurant');
-    $autoReplyMail->addAddress($_POST["email"], $_POST["name"]); // Send to the customer
-    $autoReplyMail->addReplyTo('neomoremongx@gmail.com', 'Pimenta Restaurant');
-
-    //Content
-    $autoReplyMail->isHTML(true);
-    $autoReplyMail->Subject = "Reservation Request Received - Pimenta Restaurant";
-    
-    $autoReplyMessage = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .header { background: #1e3f2d; color: white; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f9f9f9; }
-            .footer { background: #1e3f2d; color: white; padding: 15px; text-align: center; }
-        </style>
-    </head>
-    <body>
-        <div class=\"header\">
-            <h2>Thank You for Your Reservation Request!</h2>
-        </div>
-        <div class=\"content\">
-            <p>Dear {$name},</p>
-            <p>We have received your reservation request for <strong>" . date('F j, Y', strtotime($date)) . "</strong> at <strong>{$time}</strong> for <strong>{$guests}</strong> " . ($guests == 1 ? 'person' : 'people') . ".</p>
-            <p>We will review your request and contact you shortly to confirm your reservation.</p>
-            <p><strong>Reservation Details:</strong><br>
-            Date: " . date('F j, Y', strtotime($date)) . "<br>
-            Time: {$time}<br>
-            Guests: {$guests}<br>
-            Phone: {$phone}</p>
-            <p>If you have any questions, please don't hesitate to contact us.</p>
-            <p>Best regards,<br><strong>The Pimenta Restaurant Team</strong></p>
-        </div>
-        <div class=\"footer\">
-            <p>© " . date('Y') . " Pimenta Restaurant. All rights reserved.</p>
-        </div>
-    </body>
-    </html>
-    ";
-    
-    $autoReplyMail->Body = $autoReplyMessage;
-    $autoReplyMail->send();
-    
-} catch (Exception $e) {
-    // Optional: Log error but don't show to user to avoid confusion
-    error_log("Auto-reply failed: " . $autoReplyMail->ErrorInfo);
-}
-
-// ... continue with your success message ...
-    echo
-    " 
-    <script> 
-     alert('Message was sent successfully!');
-     document.location.href = 'index.html';
-    </script>
-    ";
+} else {
+    // If not a POST request, redirect to home
+    header("Location: index.html");
+    exit;
 }
 
 ?>
-
-
-
-
-
